@@ -2,20 +2,28 @@
 
 import yaml
 
-class MifareSector(object):
+
+### ValueError - wlasny
+
+class MifareClassicSector(object):
     """ Mifare Classic card sector represantion object class 
         this is a storage object with data validation and configuration methods
     """ 
-    def __init__(self):
+    def __init__(self,blocksize=0x10,blocks=0x04,data=None):
         # values here can be defined by constructor later
-        self.blocksize = 0x10
-        self.blocks    = 0x03
-
+        self.__dict__['blocksize'] = blocksize
+        self.__dict__['blocks']    = blocks
+        if not data:
+            self.__dict__['data']  = [ 0 for x in range(self.blocksize*(self.blocks-1)) ]
+        else:
+            self.__dict__['data']  = data + [ 0 for x in range(self.blocksize*self.blocks-len(data)) ]
         self.initsectorlayout()
 
     def __setattr__(self, name, value):
         """ Override __setattr__ for mutual changes in keys,acbytes and blocks """
         #super().__setattr__(self, name, value)
+        if name == 'data':
+            pass
         if name == 'trailer':
             if len(value) == self.blocksize and self.issametype(name):
                 if self.acbytes_validate(value[6:9]):
@@ -29,14 +37,14 @@ class MifareSector(object):
             else:
                 raise AttributeError('Block length is 16, int list must be provided.')
 
-        elif name == 'keya':
+        elif name == 'keya' or name =='60':
             if len(value) == 6 and self.issametype(name):
                 self.__dict__['keya']   = value 
                 self.trailer = self.keya+self.trailer[6:]
             else:
                 raise AttributeError('Key length is 6, int list must be provided.')
 
-        elif name == 'keyb':
+        elif name == 'keyb' or name =='61':
             if len(value) == 6 and self.issametype(name):
                 self.__dict__['keyb']   = value 
                 self.__dict__['trailer'] = self.trailer[:10]+self.keyb
@@ -69,12 +77,6 @@ class MifareSector(object):
 
     def initsectorlayout(self):
         
-
-        self.block     = []
-        self.nr    = -1
-        for i in range(self.blocks):
-            self.block.append( [ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,  
-                        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 ] )
         self.trailer= [ 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,              # key A
                         0xFF,0x07,0x80,                             # AC
                         0x69,                                       # GPB
@@ -86,7 +88,7 @@ class MifareSector(object):
 
 
     def acbytes_validate(self,acbytes):
-        """ Access condition bytes validation
+        """ Access conditions bytes validation
             bytes are splitted by right and left shift
             then the proper bits are cheched whether they are inverted
             with XOR operation
@@ -134,19 +136,144 @@ class MifareSector(object):
             return False
         
 class ICCard(object):
-    """ Mifare Classic card represantion object class
+    """ Universal card represantion object class
         this is a storage object with data validation and configuration methods
     """
-
-    def __init__(self):
-        # values here can be defined by constructor later
-        self.sectors  = 0x10
-        self.typeid = 'mfclassic'
-        self.initcardlayout()
-        self.sector = []
+    CARDTYPE_CHOICES = (
+        (0, 'Mifare Classic Card'),
+        (1, 'Mifare Ultralight C Card')
+        )
+   
+    SECTORS_MAX=64
 
     
-    def initcardlayout(self):
+    def __init__(self, typeid=0):
+        # values here can be defined by constructor later
+        self.sectors  = 0x10
+        self.typeid = typeid
+        # sector is an ordered list
+        self.sector = []
+        self.initcardlayout()
 
-        for i in range(self.sectors):
-            self.sector.append( MifareSector() )
+    def serialize(self):
+        return yaml.dump(self)
+    
+    def importyaml(self,filename):
+        try:
+            # TODO: przy importowaniu sprawdzac jakie atrybuty dostaje klasa obiektu
+            self = yaml.load( open(filename) ) 
+        except IOError as (errno, strerror):
+            print "I/O error({0}): {1}".format(errno, strerror)
+
+    def importcsv(self, filename,sep=' '):
+        lineformat  = [ 'block' , 'data' ]
+        try:
+            with open(filename) as f:
+                for line in f:
+                    linedict = dict(zip(lineformat,line.strip().split(sep)))
+                    if len(lineformat) == len(linedict):
+                        try:
+
+                            block = int(linedict['block'],16)
+                            data = [int(linedict['data'][x:x+2],16) for x in range(0, len(linedict['data']), 2)]
+                            print '\n\ndata:', data
+
+                            # auth data block ?
+                            sector_nr = block / self.sector[0].blocks
+                            block_nr  = block % self.sector[0].blocks
+                            print 'sector_nr', sector_nr
+                            print 'block_nr' , block_nr
+                            if block_nr == self.sector[0].blocks - 1:
+                                if self.typeid == 0:
+                                    self.sector[sector_nr].keya    =  data[0:6]
+                                    self.sector[sector_nr].acbytes =  data[6:9]
+                                    self.sector[sector_nr].gpb     = [data[9]]
+                                    self.sector[sector_nr].keyb    =  data[10:16]
+                                else: 
+                                    print 'Unsupported card type!'
+                                    return False
+                            else:
+                                if block < self.SECTORS_MAX*self.sector[0].blocks:
+                                    data_start = block_nr*self.sector[0].blocksize
+                                    print 'data_start', data_start
+                                    print 'data_end', data_start+self.sector[0].blocksize
+                                    self.sector[sector_nr].data[data_start:data_start+self.sector[0].blocksize] = data[0:self.sector[0].blocksize] 
+                                else:
+                                    print 'Bad file format!'
+                                    return False
+                            print 'sector data   :',self.sector[sector_nr].data
+                            print 'sector trailer:',self.sector[sector_nr].trailer
+
+                        except ValueError as strerror:
+                            print 'Bad file format: {0}!'.format(strerror)
+                            return False
+                    else: 
+                        print 'Bad file format!'
+                        return False
+
+                        
+                        
+        except IOError as (errno, strerror):
+            print "I/O error({0}): {1}".format(errno, strerror)
+            return False
+        except KeyError as (exc_value):
+            print "KeyError: no {0} field".format(exc_value)
+            return False
+    
+    def exportyaml(self, filename=None):
+        if filename:
+            try:
+                open(filename,'w').write(yaml.dump(self))
+            except IOError as (errno, strerror):
+                print "I/O error({0}): {1}".format(errno, strerror)
+        else:
+            return yaml.dump(self)
+    
+    def exportcsv(self, filename=None):
+        csv = ''
+        it = iter([x for x in range(self.sectors*self.sector[0].blocksize)])
+        for s in self.sector:
+            for b in range(self.sector[0].blocks):
+
+                block = it.next()
+                data_start = b*self.sector[0].blocksize
+
+                if b != self.sector[0].blocks - 1:
+                    csv += ''.join( 
+                                      ['{0:02X}'.format(block)] 
+                                    + [' ']
+                                    + map(lambda x: '{0:02X}'.format(x), 
+                                      s.data[data_start:data_start+self.sector[0].blocksize] ) 
+                                    + ['\n'] 
+                                  )
+                else:
+                    csv += ''.join( 
+                                      ['{0:02X}'.format(block)] 
+                                    + [' ']
+                                    + map(lambda x: '{0:02X}'.format(x), s.trailer ) 
+                                    + ['\n'] 
+                                  )
+                
+
+        if filename:
+            try:
+                open(filename,'w').write(csv)
+            except IOError as (errno, strerror):
+                print "I/O error({0}): {1}".format(errno, strerror)
+        else:
+            return csv
+        
+
+    def initcardlayout(self):
+        """ Initializes card, checks the type to add sectors of corresponding type.
+            Clears the sector list.
+        """
+        
+        self.sector = []
+        if self.typeid == 0:
+            
+            for i in range(self.sectors):
+                self.sector.append( MifareClassicSector() )
+
+        if self.typeid == 1:
+            pass           
