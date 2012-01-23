@@ -2,6 +2,7 @@
 
 import yaml
 
+from constants import *
 
 ### ValueError - wlasny
 
@@ -18,9 +19,12 @@ class MifareClassicSector(object):
         else:
             self.__dict__['data']  = data + [ 0 for x in range(self.blocksize*self.blocks-len(data)) ]
         self.initsectorlayout()
+    
+    def __getattr__(self, name, value):
+        """ Override __getattr__ to handle getting """
 
     def __setattr__(self, name, value):
-        """ Override __setattr__ for mutual changes in keys,acbytes and blocks """
+        """ Override __setattr__ for mutual changes in keys,acbytes and data, trailer """
         #super().__setattr__(self, name, value)
         if name == 'data':
             pass
@@ -37,14 +41,14 @@ class MifareClassicSector(object):
             else:
                 raise AttributeError('Block length is 16, int list must be provided.')
 
-        elif name == 'keya' or name =='60':
+        elif name == 'keya':
             if len(value) == 6 and self.issametype(name):
                 self.__dict__['keya']   = value 
                 self.trailer = self.keya+self.trailer[6:]
             else:
                 raise AttributeError('Key length is 6, int list must be provided.')
 
-        elif name == 'keyb' or name =='61':
+        elif name == 'keyb':
             if len(value) == 6 and self.issametype(name):
                 self.__dict__['keyb']   = value 
                 self.__dict__['trailer'] = self.trailer[:10]+self.keyb
@@ -100,15 +104,15 @@ class MifareClassicSector(object):
             return True
         else:
             return False
-    def actuple_get(self,block):
-
-        if block not in range(3):
-            raise ValueError('Allowed block number is 0,1,2.')
+    def acbytes_get(self,block):
+        
+        if block not in range(self.blocks):
+            raise ValueError('Allowed block number is 0,1,2,3.')
 
         c1=((self.acbytes[1] >> 4         ) & (0b1 << block)) >> block
         c2=((self.acbytes[2] & 0b00001111 ) & (0b1 << block)) >> block
         c3=((self.acbytes[2] >> 4         ) & (0b1 << block)) >> block
-        return c1*4+c2*2+c3
+        return c1+c2*2+c3*4
 
     def acbytes_set(self,actuple,block):
         
@@ -128,6 +132,27 @@ class MifareClassicSector(object):
         self.acbytes[0] = (~(C2+c2) << 4) | ~(C1+c1)
         self.acbytes[1] = ( (C1+c1) << 4) | ~(C3+c3)
         self.acbytes[2] = ( (C3+c3) << 4) |  (C2+c2)
+
+    def get_perms(self):
+        """ Provides list of dictionaries of each data block """
+        block = []
+        # data blocks
+        for i in range(self.blocks-1):
+            perms=MIFARE_ACB[self.acbytes_get(i)]
+            block.append({})
+            for key, perm in ACB.iteritems():
+                block[-1][key]=[]
+                for name, value in perm.iteritems():
+                    if perms | value == perms: block[-1][key].append(name)
+        # trailer block
+        perms=MIFARE_ACT[self.acbytes_get(self.blocks-1)]
+        block.append({})
+        for key, perm in ACT.iteritems():
+            block[-1][key]=[]
+            for name, value in perm.iteritems():
+                if perms | value == perms: block[-1][key].append(name)
+
+        return block
 
     def issametype(self, thislist):
         if len(set([ type(item) for item in thislist])) == 1:

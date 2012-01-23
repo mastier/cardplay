@@ -23,13 +23,13 @@ READER_OMNIKEY  = 0x11
   |||             ||||||||"""
 MIFARE_ACB = {
 0b000:          0b11111111, # Default (blank card) 
-0b001:          0b10001100,
-0b010:          0b10001000,
-0b011:          0b10101111,
-0b100:          0b10101010,
-0b101:          0b00001000,
-0b110:          0b00001100,
-0b111:          0b00000000
+0b001:          0b10001100, # allow WRITE keyB 
+0b010:          0b10001000, # only read both keys,
+0b011:          0b10101111, # allow WRITE keyB, inc,dec keyB
+0b100:          0b10101010, # only read,dec both keys
+0b101:          0b00001000, # only read keyB
+0b110:          0b00001100, # allow WRITE
+0b111:          0b00000000  # SECTOR PERNAMENTLY DISABLED
 }
 ACB = {
 'keya': { 
@@ -67,14 +67,14 @@ ACB = {
 MIFARE_ACT = {
 0b000:          0b001010001010,
 0b001:          0b000111000001,
-0b010:          0b000010001000,
-0b011:          0b000011000000,
-0b100:          0b001010101010, # Default (blank card) 
-0b101:          0b000011010000,
-0b110:          0b000111010001,
-0b111:          0b000011000000
+0b010:          0b000010001000, 
+0b011:          0b000011000000, # only read AC
+0b100:          0b001010101010, # Default (blank card), change AC with KeyA 
+0b101:          0b000011010000, # change AC with KeyB
+0b110:          0b000111010001, # change AC with KeyB
+0b111:          0b000011000000  # only read AC
 }
-ACB = {
+ACT = {
 'keya': { 
           'reada' : 0b100000000000, 
           'readb' : 0b010000000000, 
