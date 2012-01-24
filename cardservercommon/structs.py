@@ -180,9 +180,6 @@ class ICCard(object):
         self.sector = []
         self.initcardlayout()
 
-    def serialize(self):
-        return yaml.dump(self)
-    
     def importyaml(self,filename):
         try:
             # TODO: przy importowaniu sprawdzac jakie atrybuty dostaje klasa obiektu
