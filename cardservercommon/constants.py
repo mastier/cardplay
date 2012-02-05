@@ -29,7 +29,7 @@ MIFARE_ACB = {
 0b100:          0b10101010, # only read,dec both keys
 0b101:          0b00001000, # only read keyB
 0b110:          0b00001100, # allow WRITE
-0b111:          0b00000000  # SECTOR PERNAMENTLY DISABLED
+0b111:          0b00000000  # DATA BLOCK NOT AVAILABLE
 }
 ACB = {
 'keya': { 
@@ -344,6 +344,95 @@ ISO7816ErrorCodes=  {
             'X':'Authentication failed',
             }
 
+
+"""
+MAD structure information about AIDs - AN10787.pdf
+"""
+
+#function cluster code (hex) function
+FCC={
+0x00:'card administration',
+0x01:'miscellaneous applications',
+0x02:'miscellaneous applications',
+0x03:'miscellaneous applications',
+0x04:'miscellaneous applications',
+0x05:'miscellaneous applications',
+0x06:'miscellaneous applications',
+0x07:'miscellaneous applications',
+0x08:'airlines',
+0x09:'ferry trafic',
+0x10:'railway services',
+0x12:'transport',
+0x18:'city traffic',
+0x19:'Czech Railways',
+0x20:'bus services',
+0x21:'multi modal transit',
+0x28:'taxi',
+0x30:'road toll',
+0x38:'company services',
+0x40:'city card services',
+0x47:'access control & security',
+0x48:'access control & security',
+0x49:'VIGIK',
+0x4A:'Ministry of Defence, Netherlands',
+0x4B:'Bosch Telecom, Germany',
+0x4A:'Ministry of Defence, Netherlands',
+0x4C:'European Union Institutions',
+0x50:'ski ticketing',
+0x51:'access control & security',
+0x52:'access control & security',
+0x53:'access control & security',
+0x54:'access control & security',
+0x58:'academic services',
+0x60:'food',
+0x68:'non food trade',
+0x70:'hotel',
+0x75:'airport services',
+0x78:'car rental',
+0x79:'Dutch government',
+0x80:'administration services',
+0x88:'electronic purse',
+0x90:'television',
+0x91:'cruise ship',
+0x95:'IOPTA',
+0x97:'Metering',
+0x98:'telephone',
+0xA8:'warehouse',
+0xB0:'electronic trade',
+0xB8:'banking',
+0xC0:'entertainment & sports',
+0xC8:'car parking',
+0xC9:'Fleet Management',
+0xD0:'fuel, gasoline',
+0xD8:'info services',
+0xE0:'press',
+0xE1:'NFC Forum',
+0xE8:'computer',
+0xF0:'mail',
+0xF8:'miscellaneous applications',
+0xF9:'miscellaneous applications',
+0xFA:'miscellaneous applications',
+0xFB:'miscellaneous applications',
+0xFC:'miscellaneous applications',
+0xFD:'miscellaneous applications',
+0xFE:'miscellaneous applications',
+0xFF:'miscellaneous applications'
+}
+ACC={
+0x00:'Free',
+0x01:'Defect',
+0x02:'Reserved',
+0x03:'Additional info (for future cards)',
+0x04:'Cardholder information',
+0x05:'Not applicable (above memory)'
+}
+
+
+
+
+
+
+
 """
                  cmd = raw_input('<< ')
             cmd = 'FF 00 00 00 0F D4 40 01 60 0E FF FF FF FF FF FF 5E B4 15 60'
@@ -367,3 +456,4 @@ ISO7816ErrorCodes=  {
                 response=' '.join( map(lambda x: '%02X' % x  , data) )
                 print '>>',response, "| %02X %02X" % (sw1, sw2)
 """
+

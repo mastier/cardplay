@@ -3,6 +3,8 @@
 import yaml
 
 from constants import *
+from madcrc import *
+import sys
 
 ### ValueError - wlasny
 
@@ -20,8 +22,8 @@ class MifareClassicSector(object):
             self.__dict__['data']  = data + [ 0 for x in range(self.blocksize*self.blocks-len(data)) ]
         self.initsectorlayout()
     
-    def __getattr__(self, name, value):
-        """ Override __getattr__ to handle getting """
+#   def __getattr__(self, name, value):
+#       """ Override __getattr__ to handle getting """
 
     def __setattr__(self, name, value):
         """ Override __setattr__ for mutual changes in keys,acbytes and data, trailer """
@@ -42,6 +44,7 @@ class MifareClassicSector(object):
                 raise AttributeError('Block length is 16, int list must be provided.')
 
         elif name == 'keya':
+            print >>sys.stderr,"KEYA:", len(value), name
             if len(value) == 6 and self.issametype(name):
                 self.__dict__['keya']   = value 
                 self.trailer = self.keya+self.trailer[6:]
@@ -54,8 +57,8 @@ class MifareClassicSector(object):
                 self.__dict__['trailer'] = self.trailer[:10]+self.keyb
             else:
                 raise AttributeError('Key length is 6, int list must be provided.')
-
-        elif name == 'acbytes'  :
+        
+        elif name == 'acbytes':
             if len(value) == 3 and self.issametype(name):
                 if self.acbytes_validate(value):
                     self.__dict__['acbytes'] = value
@@ -72,6 +75,7 @@ class MifareClassicSector(object):
             else:
                 raise AttributeError('GPB length is 1, int list must be provided.')
         else:
+            print >>sys.stderr,'setattr:',name, value
             object.__setattr__(self, name, value)
 #        elif name == 'block0' or name == 'block1' or name == 'block2':
 #            if len(value) == 16 and self.issametype(name):
@@ -116,22 +120,26 @@ class MifareClassicSector(object):
 
     def acbytes_set(self,actuple,block):
         
-        if actuple >=0 and actuple <8:
+        if actuple not in range(8):
             raise ValueError('AC tuple is binary tuple, an integer in range <0,7>')
-        if block not in range(3):
+        if block not in range(4):
             raise ValueError('Allowed block number is 0,1,2,3.')
+       
+        C1=(actuple & 0b100) >> 2 
+        C2=(actuple & 0b010) >> 1 
+        C3=(actuple & 0b001)      
         
-        c1=((actuple & 0b100) << block)
-        c2=((actuple & 0b010) << block)
-        c3=((actuple & 0b001) << block)
-        # zero the bits to change
-        C1=(self.acbytes[1] >> 4         ) & ~(0b1 << block)
-        C2=(self.acbytes[2] & 0b00001111 ) & ~(0b1 << block)
-        C3=(self.acbytes[2] >> 4         ) & ~(0b1 << block)
-        # now set the proper bits value and make inversion of each byte parts 
-        self.acbytes[0] = (~(C2+c2) << 4) | ~(C1+c1)
-        self.acbytes[1] = ( (C1+c1) << 4) | ~(C3+c3)
-        self.acbytes[2] = ( (C3+c3) << 4) |  (C2+c2)
+        # now set the proper bits value and make inversion of each byte parts, first reset, then set bit
+        self.acbytes[0] = (self.acbytes[0] & ((1<<4+block)^0xff)) | ((C2^1) << 4+block)
+        self.acbytes[0] = (self.acbytes[0] & ((1<<block)^0xff)  ) | ((C1^1) <<   block)
+        
+        self.acbytes[1] = (self.acbytes[1] & ((1<<4+block)^0xff) ) | ( C1    << 4+block)
+        self.acbytes[1] = (self.acbytes[1] & ((1<<block)^0xff)   ) | ((C3^1) <<   block)
+
+        self.acbytes[2] = (self.acbytes[2] & ((1<<4+block)^0xff) ) | ( C3    << 4+block)
+        self.acbytes[2] = (self.acbytes[2] & ((1<<block)^0xff)   ) | ( C2    <<   block)
+        
+        self.acbytes = [ self.acbytes[0], self.acbytes[1],  self.acbytes[2] ]
 
     def get_perms(self):
         """ Provides list of dictionaries of each data block """
@@ -169,12 +177,12 @@ class ICCard(object):
         (1, 'Mifare Ultralight C Card')
         )
    
-    SECTORS_MAX=64
+    SECTORS_MAX=16
 
     
     def __init__(self, typeid=0):
         # values here can be defined by constructor later
-        self.sectors  = 0x10
+        self.sectors  = self.SECTORS_MAX
         self.typeid = typeid
         # sector is an ordered list
         self.sector = []
@@ -187,7 +195,7 @@ class ICCard(object):
         except IOError as (errno, strerror):
             print "I/O error({0}): {1}".format(errno, strerror)
 
-    def importcsv(self, filename,sep=' '):
+    def importcsv(self, filename,sep=','):
         lineformat  = [ 'block' , 'data' ]
         try:
             with open(filename) as f:
@@ -215,7 +223,7 @@ class ICCard(object):
                                     print 'Unsupported card type!'
                                     return False
                             else:
-                                if block < self.SECTORS_MAX*self.sector[0].blocks:
+                                if block < self.sectors*self.sector[0].blocks:
                                     data_start = block_nr*self.sector[0].blocksize
                                     print 'data_start', data_start
                                     print 'data_end', data_start+self.sector[0].blocksize
@@ -240,6 +248,59 @@ class ICCard(object):
             return False
         except KeyError as (exc_value):
             print "KeyError: no {0} field".format(exc_value)
+            return False
+    
+    def importbin(self, filename):
+        try:
+            binary = []
+            with open(filename,'rb') as f:
+                while True:
+                    byte = f.read(1)
+                    if byte == "":
+                        break
+                    byte = ord(byte)
+                    binary.append(byte)
+                    
+            """ cut the list to the size of card """
+            binary = binary[0:self.sectors*self.sector[0].blocks*self.sector[0].blocksize]
+            print binary
+            print len(binary)
+
+            for b in range( self.sectors*self.sector[0].blocks - 1 ):
+                try:
+                    data = binary[b*self.sector[0].blocksize:(b+1)*self.sector[0].blocksize]
+
+                    sector_nr = b / self.sector[0].blocks
+                    block_nr  = b % self.sector[0].blocks
+
+                    if block_nr == self.sector[0].blocks - 1:
+                        if self.typeid == 0:
+                            self.sector[sector_nr].keya    =  data[0:6]
+                            self.sector[sector_nr].acbytes =  data[6:9]
+                            self.sector[sector_nr].gpb     = [data[9]]
+                            self.sector[sector_nr].keyb    =  data[10:16]
+                        else: 
+                            print 'Unsupported card type!'
+                            return False
+                    else:
+                        if b < self.sectors*self.sector[0].blocks: # not needed
+                            data_start = block_nr*self.sector[0].blocksize
+                            print 'data_start', data_start
+                            print 'data_end', data_start+self.sector[0].blocksize
+                            self.sector[sector_nr].data[data_start:data_start+self.sector[0].blocksize] = data[0:self.sector[0].blocksize] 
+
+                        else:
+                            print 'Bad file format!'
+                            return False
+                    print 'sector data   :',self.sector[sector_nr].data
+                    print 'sector trailer:',self.sector[sector_nr].trailer
+
+                except ValueError as strerror:
+                    print 'Bad file format: {0}!'.format(strerror)
+                    return False
+                        
+        except IOError as (errno, strerror):
+            print "I/O error({0}): {1}".format(errno, strerror)
             return False
     
     def exportyaml(self, filename=None):
@@ -284,7 +345,23 @@ class ICCard(object):
                 print "I/O error({0}): {1}".format(errno, strerror)
         else:
             return csv
-        
+    def hasMAD(self):
+        self.mad_crc  = self.sector[0].data[16]
+        self.mad_info = self.sector[0].data[17]
+        aid           = self.sector[0].data[18:]
+        return (sector_0x00_crc8(self.sector[0].data[17:]) == self.mad_crc)
+
+    def getMAD(self):
+        """ Only MAD1 i supported """
+        self.aid_explained = []
+        if self.hasMAD():
+            self.aid      = [ ( aid[x+1],aid[x] ) for x in range(0, len(aid), 2) ]
+            print self.aid
+            for a in self.aid:
+                j = FCC.get(a[0],a[0])
+                k = ACC.get(a[1],a[1])
+                self.aid_explained.append( ( j, k ) )
+        return self.aid_explained
 
     def initcardlayout(self):
         """ Initializes card, checks the type to add sectors of corresponding type.
