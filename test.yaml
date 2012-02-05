@@ -1,228 +1,180 @@
 !!python/object:cardservercommon.structs.ICCard
 sector:
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
-- !!python/object:cardservercommon.structs.MifareSector
+- !!python/object:cardservercommon.structs.MifareClassicSector
   acbytes: [255, 7, 128]
-  block:
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  - [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  blocks: 3
+  blocks: 4
   blocksize: 16
+  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   gpb: [105]
   keya: [255, 255, 255, 255, 255, 255]
   keyb: [255, 255, 255, 255, 255, 255]
-  nr: -1
   trailer: [255, 255, 255, 255, 255, 255, 255, 7, 128, 105, 255, 255, 255, 255, 255,
     255]
 sectors: 16
-typeid: mfclassic
+typeid: 0
