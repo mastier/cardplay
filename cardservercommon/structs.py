@@ -187,6 +187,9 @@ class ICCard(object):
         # sector is an ordered list
         self.sector = []
         self.initcardlayout()
+        # for mifare classic 1k
+        self.blocksize = 0x10
+        self.blocks = 0x04
 
     def importyaml(self,filename):
         try:
@@ -348,16 +351,17 @@ class ICCard(object):
     def hasMAD(self):
         self.mad_crc  = self.sector[0].data[16]
         self.mad_info = self.sector[0].data[17]
-        aid           = self.sector[0].data[18:]
+        self.aid           = self.sector[0].data[18:]
+        return True
         return (sector_0x00_crc8(self.sector[0].data[17:]) == self.mad_crc)
 
     def getMAD(self):
         """ Only MAD1 i supported """
         self.aid_explained = []
         if self.hasMAD():
-            self.aid      = [ ( aid[x+1],aid[x] ) for x in range(0, len(aid), 2) ]
-            print self.aid
-            for a in self.aid:
+            aid      = [ ( self.aid[x+1],self.aid[x] ) for x in range(0, len(self.aid), 2) ]
+            print aid
+            for a in aid:
                 j = FCC.get(a[0],a[0])
                 k = ACC.get(a[1],a[1])
                 self.aid_explained.append( ( j, k ) )
