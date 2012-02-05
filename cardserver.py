@@ -221,29 +221,23 @@ class CardServer(threading.Thread):
         rlistnames = []
         map(lambda x: rlistnames.append(x.name), rlist)
         print "Found readers:",rlistnames
-        if rlist:
-            for r in rlist: 
-                if   'ACS ACR122U' in r.name:
+        for r in rlist: 
+            if   'ACS ACR122U' in r.name:
+                self.readertype    = READER_PCSC
+                self.readersubtype = READER_ACS
+                self.reader = r
+            elif 'OMNIKEY'     in r.name:
+                if '00 01' in r.name: # the contactless interface must be choosen
                     self.readertype    = READER_PCSC
-                    self.readersubtype = READER_ACS
+                    self.readersubtype = READER_OMNIKEY
+                    print >>sys.stderr,rlist.index(r)
                     self.reader = r
-                elif 'OMNIKEY'     in r.name:
-                    if '00 01' in r.name: # the contactless interface must be choosen
-                        self.readertype    = READER_PCSC
-                        self.readersubtype = READER_OMNIKEY
-                        print >>sys.stderr,rlist.index(r)
-                        self.reader = r
-                else:
-                    print 'No supported readers found'
-                    sys.exit(1)
-        else:
-            print 'No supported readers found'
-            sys.exit(1)
-
+            else:
+                print 'No supported readers found'
+                sys.exit(1)
 
         # Now connect to reader and attach observer
         self.connection =  self.reader.createConnection()
-        print self.connection
         # If interactive turn off showing the bytes sent
         observer = CustomCardConnectionObserver() if self.args['interactive'] else CustomCardConnectionObserver(True)
         self.connection.addObserver(observer)
