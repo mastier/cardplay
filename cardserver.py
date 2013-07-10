@@ -2,25 +2,24 @@
 
 import sys,os,argparse
 
-from smartcard.System import readers
-
-#card monitoring
-from smartcard.CardMonitoring import CardMonitor, CardObserver
-from smartcard.CardConnectionObserver import CardConnectionObserver
-
-#from smartcard.CardType import AnyCardType
-#from smartcard.CardRequest import CardRequest
-# hexToString util
-from smartcard.util import *
-#In Exception we trust
-from smartcard.Exceptions import *
+try:
+    from smartcard.System import readers
+    #card monitoring
+    from smartcard.CardMonitoring import CardMonitor, CardObserver
+    from smartcard.CardConnectionObserver import CardConnectionObserver
+    # hexToString util
+    from smartcard.util import *
+    #In Exception we trust
+    from smartcard.Exceptions import *
+except ImportError:
+    print >>sys.stderr, 'Cannot import smartcard! In debian-based systems you would need: python-pyscard package' 
+    sys.exit(1)
 
 # threading support
 import threading
 
 import re
 from time import *
-
 
 # additional content
 from cardservercommon.constants import *
