@@ -1,16 +1,14 @@
 #! /usr/bin/env python
 
-import sys,os,argparse
+import sys,argparse
 
 try:
     from smartcard.System import readers
     #card monitoring
-    from smartcard.CardMonitoring import CardMonitor, CardObserver
+    from smartcard.CardMonitoring import CardObserver
     from smartcard.CardConnectionObserver import CardConnectionObserver
-    # hexToString util
-    from smartcard.util import *
     #In Exception we trust
-    from smartcard.Exceptions import *
+    from smartcard.Exceptions import CardConnectionException
 except ImportError:
     print >>sys.stderr, 'Cannot import smartcard! In debian-based systems you would need: python-pyscard package' 
     sys.exit(1)
@@ -19,13 +17,11 @@ except ImportError:
 import threading
 
 import re
-from time import *
 
 # additional content
 from cardservercommon.constants import *
 from cardservercommon.utilities import *
 from cardservercommon.structs   import *
-
 
 
 class CustomCardConnectionObserver(CardConnectionObserver): 
@@ -52,11 +48,6 @@ class CustomCardConnectionObserver(CardConnectionObserver):
             else: 
                 print '>> ', bytes2hex(ccevent.args[0]),'"'+bytes2ascii(ccevent.args[0])+'"', "{0:02X} {1:02X}".format(ccevent.args[-2],ccevent.args[-1])
 
-#class CLCard(object):
-    
-
-
-
 
 class CardServer(threading.Thread):
     """ CardServer main class controls the readers connections, sends APDU commands,
@@ -69,7 +60,6 @@ class CardServer(threading.Thread):
             
     def run(self):
         self.determine_reader()
-#       self.determine_tagtype()
 
         if self.args['interactive']:
             self.spawnshell()
@@ -78,8 +68,6 @@ class CardServer(threading.Thread):
             if 'infile' in self.args.keys():        
                 """ File is taken as a input of keytype, key, block (and data to be written) """
                 self.batchexec(self.getsource(self.args['infile']), self.args['action'], self.args['output'])
-
-
 
             if 'line'   in self.args.keys():        
                 """ Line is taken as a input of keytype, key, block """
@@ -163,8 +151,7 @@ class CardServer(threading.Thread):
                     if self.accesscond_validate( hex2bytes(d['data'])[6:9] ):
                         print 'AC OK!'
                     else:
-                        print 'AC schlecht!'
-#                data = ([0x00,0x00,0x00],0x63,0x00)
+                        print 'AC BAD!'
                 data = self.writeblock( hex2bytes(d['block']),\
                                            hex2bytes(d['keytype']),\
                                            hex2bytes(d['key']),\
@@ -174,14 +161,12 @@ class CardServer(threading.Thread):
             """ Verify the result """
             if self.args['native'] and data[0][:3] == [0xD5, 0x41,0x00] and len(data[0]) > 3:
                 outfile.write(  d['block']+' '+d['keytype']+' '+d['key']+' '+\
-#                                            self.accesscond_interpret(  data[0][3:][6:9],int(d['block'],16) % 4)+' '+\
                                             bytes2hex  (data[0][3:])+' '+\
                                             bytes2ascii(data[0][3:])+'\n'
                                      )
 
             elif not self.args['native'] and data[0]:
                 outfile.write(  d['block']+' '+d['keytype']+' '+d['key']+' '+\
-#                                            self.accesscond_interpret(  data[0][6:9],int(d['block'],16) % 4)+' '+\
                                             bytes2hex  (data[0])+' '+\
                                             bytes2ascii(data[0])+'\n'
                                          )
@@ -265,7 +250,6 @@ class CardServer(threading.Thread):
     
         if cmdbytes:
             try:
-                #print 'COMMAND:',bytes2hex(cmdbytes)
                 responsedata = self.connection.transmit(cmdbytes)
                 return responsedata
 
@@ -324,8 +308,6 @@ class CardServer(threading.Thread):
         
     def readblock(self, card, sector, block):
        
-#       actuple = card.sector[sector].actuple_get(block)
-
         if self.readertype == READER_PCSC:
             if self.readersubtype == READER_ACS and self.args['native']:
                 response = self.acs_authenticate(block,keytype,key)
@@ -345,8 +327,6 @@ class CardServer(threading.Thread):
                     return response
 
     def writeblock(self, card, sector, block, data):
-        
-
 
         if self.readertype == READER_PCSC:
             if self.readersubtype == READER_ACS and self.args['native']:
@@ -366,7 +346,6 @@ class CardServer(threading.Thread):
                 else:
                     return response
 
-
     def spawnshell(self):
         while True:
             try:
@@ -385,10 +364,7 @@ class CardObserverExt(CardObserver):
 
     def update(self, observable, (addedcards, removedcards)):
         for card in addedcards:
-            #print observable.__name__
-            #card.__dict__()
             print "\n+Inserted: ", toHexString(card.atr)
-            #self.cardshell = CardShell(card)
         for card in removedcards:
             print "\n-Removed: ", toHexString(card.atr)
             sys.exit(0)
@@ -420,6 +396,5 @@ if __name__=='__main__':
     parser.add_argument('-n','--native', const=True, action='store_const', help='turn on NATIVE MODE if reader has one (like ACR122U)' )
     args = parser.parse_args()
 
-    print args.__dict__
     CardServer(args.__dict__).start()
 

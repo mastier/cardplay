@@ -6,8 +6,6 @@ from constants import *
 from madcrc import *
 import sys
 
-### ValueError - wlasny
-
 class MifareClassicSector(object):
     """ Mifare Classic card sector represantion object class 
         this is a storage object with data validation and configuration methods
@@ -22,9 +20,6 @@ class MifareClassicSector(object):
             self.__dict__['data']  = data + [ 0 for x in range(self.blocksize*self.blocks-len(data)) ]
         self.initsectorlayout()
     
-#   def __getattr__(self, name, value):
-#       """ Override __getattr__ to handle getting """
-
     def __setattr__(self, name, value):
         """ Override __setattr__ for mutual changes in keys,acbytes and data, trailer """
         #super().__setattr__(self, name, value)
@@ -77,11 +72,6 @@ class MifareClassicSector(object):
         else:
             print >>sys.stderr,'setattr:',name, value
             object.__setattr__(self, name, value)
-#        elif name == 'block0' or name == 'block1' or name == 'block2':
-#            if len(value) == 16 and self.issametype(name):
-#                self.__dict__[name] = value
-#            else:
-#                raise AttributeError('Block length is 16, int list must be provided.')
 
     def initsectorlayout(self):
         
