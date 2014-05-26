@@ -1,4 +1,13 @@
 #! /usr/bin/env python
+## Copyright (C) 2014
+##
+## Author: Bartosz Woronicz <bartosz@woronicz.com>
+## URL: http://github.com/mastier/
+## GIT: https://github.com/mastier/
+## Version: 0.1
+## Created: 2014-06-01
+## Keywords: pycard python libnfc libpcsclite mifare
+## Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 import sys,argparse
 
@@ -19,9 +28,9 @@ import threading
 import re
 
 # additional content
-from cardservercommon.constants import *
-from cardservercommon.utilities import *
-from cardservercommon.structs   import *
+from cardplaycommon.constants import *
+from cardplaycommon.utilities import *
+from cardplaycommon.structs   import *
 
 
 class CustomCardConnectionObserver(CardConnectionObserver): 
