@@ -384,6 +384,9 @@ class RunAction(argparse.Action):
         setattr(namespace, self.dest, values)
 
 if __name__=='__main__':
+    if sys.version_info<(2,7,0):
+        sys.stderr.write("You need python 2.7 or later to run this script\n")
+        exit(1)
     parser = argparse.ArgumentParser(description='Operates on Mifare Classic tag')
     groupact = parser.add_mutually_exclusive_group(required=True)
     groupact.add_argument('-a','--action', nargs='?', choices=['read','write','ac'], help='Action to take, read/write, read AC')
